@@ -47,7 +47,7 @@ Show deck example::
 
 Compare decks example::
 
-    $ hsdecks.py AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA AAECAea5AwTMugPDvAONvQPaxgMNlwaLugPXuwPEvAPgvAO6xgPHxgPZxgPVyAP3yAP5yAP+yAPyyQMA
+    $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA AAECAea5AwTMugPDvAONvQPaxgMNlwaLugPXuwPEvAPgvAO6xgPHxgPZxgPVyAP3yAP5yAP+yAPyyQMA
 
     DECK DIFFERENCES
     ----------------
@@ -127,7 +127,7 @@ Usage
 
 ::
 
-    usage: hsdecks.py [-h] [-l LANG] [-u | -r] [-v] [deck [deck ...]]
+    usage: hsdecks [-h] [-l LANG] [-u | -r] [-v] [deck [deck ...]]
 
     decode and show hearthstone deck or compare two decks
 
