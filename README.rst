@@ -13,6 +13,9 @@ If a single deck code is passed as argument, the entire deck is show.
 
 To compare two decks just pass two deck codes as arguments.
 
+Multiple languages are supported, just use the '-l' switch. See example below and usage for
+a list of supported languages.
+
 Show deck example::
 
     $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA
@@ -75,6 +78,35 @@ Compare decks example::
          2  COMMON        2  Spectral Sight
          3  RARE          2  Questing Adventurer
 
+Show deck in ptBR::
+
+    $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA -l ptbr
+
+    CLASS: DEMONHUNTER
+    TYPE: STANDARD
+
+      MANA  RARITY       QTY  NAME
+    ------  ---------  -----  -----------------------------
+         0  COMMON         2  Talho Duplo
+         1  COMMON         2  Maga de Batalha Fulgurante
+         1  COMMON         2  Emissário do Signo Carmesim
+         1  COMMON         2  Carnífice de Batalha
+         2  FREE           1  Gosma Ácida do Pântano
+         2  COMMON         2  Asumbra
+         2  FREE           2  Golpe do Caos
+         3  EPIC           2  Raio Ocular
+         3  FREE           2  Feitor Sátiro
+         4  LEGENDARY      1  Altruis, o Proscrito
+         4  LEGENDARY      1  Kayn Solfúria
+         4  RARE           2  Bradovil Enraivecida
+         5  LEGENDARY      1  Metamorfose
+         5  EPIC           2  Glaives de Guerra de Azzinoth
+         5  FREE           2  Adepto da Glaive Jurada
+         6  RARE           2  Crânio de Gul'dan
+         7  RARE           2  Sacerdotisa da Fúria
+
+    DUST: 7400
+
 
 Notes
 =====
@@ -95,14 +127,22 @@ Usage
 
 ::
 
-    Usage: hsdecks deck [deck]
+    usage: hsdecks.py [-h] [-l LANG] [-u | -r] [-v] [deck [deck ...]]
 
     decode and show hearthstone deck or compare two decks
 
-    Options:
-        --version     show program's version number and exit
-        -h, --help    show this help message and exit
-        -u, --update  download cards definitions and create a new database
+    positional arguments:
+        deck
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        -l LANG, --lang LANG  language of the card name: deDE, enUS, esES, esMX,
+                              frFR, itIT, jaJP, koKR, plPL, ptBR, ruRU, thTH, zhCN
+                              or zhTW (default: enUS)
+        -u, --update          check online for cards definitions and update database
+                              if needed
+        -r, --recreate        download cards definitions and recreate database
+        -v, --version         show program's version number and exit
 
 
 .. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
