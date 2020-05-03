@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# hsdecks 0.2
+# hsdecks 0.2.1
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
 # date: 20200502
@@ -18,7 +18,7 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.2"
+_version = "0.2.1"
 
 
 # Parse args
@@ -136,7 +136,7 @@ def get_latest_build():
 
 # Populate database
 def populate_db(db, cards_file, build):
-    with open(cards_file, "rt") as f:
+    with open(cards_file, "rt", encoding="utf-8") as f:
         cards = json.load(f)
     for card in cards:
         new_card = {

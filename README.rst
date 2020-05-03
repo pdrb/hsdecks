@@ -112,6 +112,7 @@ Notes
 =====
 
 - Works on Python 3
+- Tested on Linux and Windows but should work on all platforms
 
 
 Install
