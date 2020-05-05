@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# hsdecks 0.2.1
+# hsdecks 0.3.0
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
-# date: 20200502
+# date: 20200504
 
 import argparse
 import json
@@ -18,14 +18,12 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.2.1"
+_version = "0.3.0"
 
 
 # Parse args
 def get_parsed_args():
-    parser = argparse.ArgumentParser(
-        description="decode and show hearthstone deck or compare two decks"
-    )
+    parser = argparse.ArgumentParser(description="hearthstone deck tool")
     parser.add_argument("deck", nargs="*")
     parser.add_argument(
         "-l",
@@ -52,6 +50,19 @@ def get_parsed_args():
         "koKR, plPL, ptBR, ruRU, thTH, zhCN or zhTW (default: %(default)s)",
         metavar="LANG",
     )
+    parser.add_argument(
+        "-i",
+        "--import-collection",
+        action="store_true",
+        default=False,
+        help="import hearthstone collection from hsreplay",
+    )
+    parser.add_argument(
+        "-m",
+        "--missing",
+        help="show missing deck cards from user collection and cost to craft",
+        metavar="USER",
+    )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-u",
@@ -67,13 +78,25 @@ def get_parsed_args():
         default=False,
         help="download cards definitions and recreate database",
     )
+    group.add_argument(
+        "--clear",
+        action="store_true",
+        default=False,
+        help="clear database, removing all cards definitions and user collections",
+    )
     parser.add_argument("-v", "--version", action="version", version=_version)
 
     # Parse the args
     args = parser.parse_args()
 
     # Print help if no deck and action provided
-    if len(args.deck) == 0 and not args.update and not args.recreate:
+    if (
+        len(args.deck) == 0
+        and not args.update
+        and not args.recreate
+        and not args.import_collection
+        and not args.clear
+    ):
         parser.print_help()
         sys.exit(2)
 
@@ -132,6 +155,50 @@ def get_latest_build():
         print("\nerror: could not get cards definitions build")
         sys.exit(1)
     return build
+
+
+# Download collection
+def download_collection(url, app_dir):
+    headers = {"User-Agent": "hsdecks/" + _version}
+    # Remove / from url if needed
+    if url.endswith("/"):
+        url = url[:-1]
+    try:
+        api_url = (
+            "https://hsreplay.net/api/v1/collection/?region="
+            + url.split("/")[-2]
+            + "&account_lo="
+            + url.split("/")[-1]
+        )
+    except:
+        print("\nerror: invalid collection url")
+        sys.exit(1)
+    req = urllib2.Request(api_url, headers=headers)
+    try:
+        resp = urllib2.urlopen(req)
+        with open(os.path.join(app_dir, "collection.json"), "wb") as f:
+            f.write(resp.read())
+    except urllib2.HTTPError:
+        print("\nerror: could not download collection from url")
+        sys.exit(1)
+
+
+# Import collection
+def populate_collection(db, user, app_dir):
+    col_file = os.path.join(app_dir, "collection.json")
+    with open(col_file, "rt", encoding="utf-8") as f:
+        collection = json.load(f)
+    collection = collection["collection"]
+    new_collection = {}
+    for k, v in collection.items():
+        # Normal + golden
+        qty = v[0] + v[1]
+        if qty > 0:
+            new_collection[k] = qty
+    db.insert(new_collection, user)
+    db.save()
+    # Remove collection file
+    os.remove(col_file)
 
 
 # Populate database
@@ -214,6 +281,26 @@ def dust_cost(deck):
     return cost
 
 
+# Find missing deck cards from collection
+def missing_deck_cards(db, user, args):
+    decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
+    missing = []
+    user_col = db.get(user)
+    if not user_col:
+        print("error: user collection does not exists")
+        sys.exit(1)
+    for card in decoded_deck:
+        card_qty = user_col.get(str(card[0]))
+        if not card_qty:
+            card_qty = 0
+        missing_qty = card[1] - card_qty
+        if missing_qty > 0:
+            missing.append((card[0], missing_qty))
+    missing_deck = create_deck(missing, db, args.lang)
+    missing_deck.sort(key=lambda card: card[0])
+    return missing_deck, hero_class_id, deck_type
+
+
 # Main cli
 def cli():
     args = get_parsed_args()
@@ -224,22 +311,58 @@ def cli():
     db_file = os.path.join(app_dir, "db.json")
     db = dbj(db_file)
 
+    # Clear database
+    if args.clear:
+        print("\nClearing database...")
+        db.clear()
+        db.save()
+        print(" Done!")
+        sys.exit(0)
+
+    # Create database if needed
+    if not db.get("_meta") or args.recreate:
+        create_db(db, app_dir)
+
     # Check for cards definitions update
     if args.update:
         update_db(db, app_dir)
 
-    # Create database if needed
-    if db.size() == 0 or args.recreate:
-        create_db(db, app_dir)
+    # Import collection
+    if args.import_collection:
+        print("\nIMPORT COLLECTION")
+        print("-----------------")
+        col_url = input("\nHSReplay public collection URL: ")
+        col_url = col_url.strip()
+        user = input("Username to save collection: ")
+        user = user.strip().lower()
+        print("\nImporting collection...")
+        download_collection(col_url, app_dir)
+        populate_collection(db, user, app_dir)
+        print(" Done!")
 
-    # Show deck
     if len(args.deck) == 1:
-        decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
-        deck = create_deck(decoded_deck, db, args.lang)
-        # Sort deck by mana cost
-        deck.sort(key=lambda card: card[0])
-        print_deck(deck, db.get(str(hero_class_id))["cardClass"], deck_type)
-        print("\nDUST: {}\n".format(dust_cost(deck)))
+        # Show missing deck cards from user collection
+        if args.missing:
+            missing_deck, hero_class_id, deck_type = missing_deck_cards(
+                db, args.missing, args
+            )
+            print("\nMISSING CARDS")
+            print("-------------")
+            if missing_deck:
+                print_deck(
+                    missing_deck, db.get(str(hero_class_id))["cardClass"], deck_type
+                )
+                print("\nDUST TO CRAFT: {}\n".format(dust_cost(missing_deck)))
+            else:
+                print("NO CARDS MISSING! NICE :)\n")
+        # Show deck
+        else:
+            decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
+            deck = create_deck(decoded_deck, db, args.lang)
+            # Sort deck by mana cost
+            deck.sort(key=lambda card: card[0])
+            print_deck(deck, db.get(str(hero_class_id))["cardClass"], deck_type)
+            print("\nDUST: {}\n".format(dust_cost(deck)))
 
     # Compare decks
     if len(args.deck) == 2:

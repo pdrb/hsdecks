@@ -3,11 +3,14 @@
 hsdecks
 =======
 
-Decode and show Hearthstone deck or compare two decks.
+Hearthstone deck tool.
 
 It uses `python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ deckstring
 parser to decode the deck and `HearthstoneJSON <https://hearthstonejson.com/>`_ cards definitions
 to build a simple cards database - this is done automatically on the first execution.
+
+HSReplay collection can be imported and used to calculate missing cards and dust cost to
+craft a deck.
 
 If a single deck code is passed as argument, the entire deck is show.
 
@@ -107,6 +110,38 @@ Show deck in ptBR::
 
     DUST: 7400
 
+To import a collection just run with the '-i' switch::
+
+    $ hsdecks -i
+
+    IMPORT COLLECTION
+    -----------------
+
+    HSReplay public collection URL: https://hsreplay.net/collection/.../
+    Username to save collection: myuser
+
+    Importing collection...
+     Done!
+
+After that, you can check for missing cards and dust cost to craft a deck::
+
+    $ hsdecks AAECAaIHHrQBsgLtAogHigfdCI+XA5KXA/6aA/yjA/KlA4SnA/WnA7euA7muA8GuA/6uA86vA4KxA5GxA+O0A4S2A7m4A8y5A865A9C5A7m+A9a+A8vAA/vEAwAA -m myuser
+
+    MISSING CARDS
+    -------------
+
+    CLASS: ROGUE
+    TYPE: STANDARD
+
+      MANA  RARITY       QTY  NAME
+    ------  ---------  -----  -----------------------
+         2  LEGENDARY      1  Zephrys the Great
+         4  EPIC           1  Escaped Manasaber
+         7  LEGENDARY      1  Siamat
+         9  LEGENDARY      1  Dragonqueen Alexstrasza
+
+    DUST TO CRAFT: 5200
+
 
 Notes
 =====
@@ -128,9 +163,10 @@ Usage
 
 ::
 
-    usage: hsdecks [-h] [-l LANG] [-u | -r] [-v] [deck [deck ...]]
+    usage: hsdecks [-h] [-l LANG] [-i] [-m USER] [-u | -r | --clear] [-v]
+                   [deck [deck ...]]
 
-    decode and show hearthstone deck or compare two decks
+    hearthstone deck tool
 
     positional arguments:
         deck
@@ -140,9 +176,16 @@ Usage
         -l LANG, --lang LANG  language of the card name: deDE, enUS, esES, esMX,
                               frFR, itIT, jaJP, koKR, plPL, ptBR, ruRU, thTH, zhCN
                               or zhTW (default: enUS)
+        -i, --import-collection
+                              import hearthstone collection from hsreplay
+        -m USER, --missing USER
+                              show missing deck cards from user collection and cost
+                              to craft
         -u, --update          check online for cards definitions and update database
                               if needed
         -r, --recreate        download cards definitions and recreate database
+        --clear               clear database, removing all cards definitions and
+                              user collections
         -v, --version         show program's version number and exit
 
 

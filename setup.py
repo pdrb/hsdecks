@@ -8,20 +8,20 @@ with open(path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = f.read()
 
 
-version = "0.2.1"
+version = "0.3.0"
 
 
 setup(
     name="hsdecks",
     version=version,
-    description="Decode and show Hearthstone deck or compare two decks",
+    description="Hearthstone deck tool",
     long_description=long_description,
     author="Pedro Buteri Gonring",
     author_email="pedro@bigode.net",
     url="https://github.com/pdrb/hsdecks",
     license="MIT",
     classifiers=[],
-    keywords="hs hearthstone deck decks compare",
+    keywords="hs hearthstone deck tool",
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
     install_requires=["tabulate", "dbj"],
     entry_points={"console_scripts": ["hsdecks=hsdecks.hsdecks:cli"],},
