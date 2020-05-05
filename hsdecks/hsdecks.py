@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# hsdecks 0.3.1
+# hsdecks 0.3.2
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
-# date: 20200504
+# date: 20200505
 
 import argparse
 import json
@@ -12,13 +12,13 @@ import os
 
 import urllib.request as urllib2
 
-from .deckstrings import parse_deckstring
+from deckstrings import parse_deckstring
 
 from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.3.1"
+_version = "0.3.2"
 
 
 # Parse args
@@ -195,7 +195,7 @@ def populate_collection(db, user, app_dir):
         qty = v[0] + v[1]
         if qty > 0:
             new_collection[k] = qty
-    db.insert(new_collection, user)
+    db.insert(new_collection, "collection:" + user)
     db.save()
     # Remove collection file
     os.remove(col_file)
@@ -285,7 +285,7 @@ def dust_cost(deck):
 def missing_deck_cards(db, user, args):
     decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
     missing = []
-    user_col = db.get(user.lower())
+    user_col = db.get("collection:" + user.lower())
     if not user_col:
         print("error: user collection does not exists")
         sys.exit(1)

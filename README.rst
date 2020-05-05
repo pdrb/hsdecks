@@ -125,7 +125,7 @@ To import a collection just run with the '-i' switch::
 
 After that, you can check for missing cards and dust cost to craft a deck::
 
-    $ hsdecks -m myuser AAECAea5AwTMugPDvAPaxgP8yAMN+a4DurYDi7oD17sDxLwD4LwD1r4DusYDx8YD1cgD98gD+cgD/sgDAA==
+    $ hsdecks -m myuser AAECAea5AwTMugPDvAONvQPaxgMN+a4Di7oDvbsD17sDxLwD4LwDusYDx8YD2cYD18gD98gD+cgD/sgDAA==
 
     MISSING CARDS
     -------------
@@ -136,11 +136,10 @@ After that, you can check for missing cards and dust cost to craft a deck::
       MANA  RARITY       QTY  NAME
     ------  ---------  -----  ----------------------
          4  LEGENDARY      1  Kayn Sunfury
-         4  RARE           2  Frenzied Felwing
          5  LEGENDARY      1  Metamorphosis
          5  EPIC           2  Warglaives of Azzinoth
 
-    DUST TO CRAFT: 4200
+    DUST TO CRAFT: 4000
 
 
 Notes
