@@ -125,22 +125,22 @@ To import a collection just run with the '-i' switch::
 
 After that, you can check for missing cards and dust cost to craft a deck::
 
-    $ hsdecks AAECAaIHHrQBsgLtAogHigfdCI+XA5KXA/6aA/yjA/KlA4SnA/WnA7euA7muA8GuA/6uA86vA4KxA5GxA+O0A4S2A7m4A8y5A865A9C5A7m+A9a+A8vAA/vEAwAA -m myuser
+    $ hsdecks -m myuser AAECAea5AwTMugPDvAPaxgP8yAMN+a4DurYDi7oD17sDxLwD4LwD1r4DusYDx8YD1cgD98gD+cgD/sgDAA==
 
     MISSING CARDS
     -------------
 
-    CLASS: ROGUE
+    CLASS: DEMONHUNTER
     TYPE: STANDARD
 
       MANA  RARITY       QTY  NAME
-    ------  ---------  -----  -----------------------
-         2  LEGENDARY      1  Zephrys the Great
-         4  EPIC           1  Escaped Manasaber
-         7  LEGENDARY      1  Siamat
-         9  LEGENDARY      1  Dragonqueen Alexstrasza
+    ------  ---------  -----  ----------------------
+         4  LEGENDARY      1  Kayn Sunfury
+         4  RARE           2  Frenzied Felwing
+         5  LEGENDARY      1  Metamorphosis
+         5  EPIC           2  Warglaives of Azzinoth
 
-    DUST TO CRAFT: 5200
+    DUST TO CRAFT: 4200
 
 
 Notes

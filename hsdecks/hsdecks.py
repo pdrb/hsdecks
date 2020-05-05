@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# hsdecks 0.3.0
+# hsdecks 0.3.1
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
 # date: 20200504
@@ -18,7 +18,7 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.3.0"
+_version = "0.3.1"
 
 
 # Parse args
@@ -285,7 +285,7 @@ def dust_cost(deck):
 def missing_deck_cards(db, user, args):
     decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
     missing = []
-    user_col = db.get(user)
+    user_col = db.get(user.lower())
     if not user_col:
         print("error: user collection does not exists")
         sys.exit(1)
