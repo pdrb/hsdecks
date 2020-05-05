@@ -12,7 +12,7 @@ import os
 
 import urllib.request as urllib2
 
-from deckstrings import parse_deckstring
+from .deckstrings import parse_deckstring
 
 from tabulate import tabulate
 from dbj import dbj
