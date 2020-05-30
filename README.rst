@@ -145,7 +145,7 @@ Also, you can get a collection summary::
     $ hsdecks -s myuser
 
     Myuser COLLECTION
-    ------------------
+    -----------------
 
     BASIC
     -----

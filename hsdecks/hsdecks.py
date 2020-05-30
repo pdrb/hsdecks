@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# hsdecks 0.4.0
+# hsdecks 0.4.1
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
 # date: 20200529
@@ -17,7 +17,7 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.4.0"
+_version = "0.4.1"
 
 
 # Parse args
