@@ -5,12 +5,10 @@ hsdecks
 
 Hearthstone deck tool.
 
-It uses `python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ deckstring
-parser to decode the deck and `HearthstoneJSON <https://hearthstonejson.com/>`_ cards definitions
-to build a simple cards database - this is done automatically on the first execution.
+Cards database is created automatically on the first execution.
 
-HSReplay collection can be imported and used to calculate missing cards and dust cost to
-craft a deck.
+HSReplay collection can be imported and used to show a collection summary and to calculate
+dust cost to craft a deck and missing cards.
 
 If a single deck code is passed as argument, the entire deck is show.
 
@@ -118,7 +116,7 @@ To import a collection just run with the '-i' switch::
     -----------------
 
     HSReplay public collection URL: https://hsreplay.net/collection/.../
-    Username to save collection: myuser
+    Collection name: myuser
 
     Importing collection...
      Done!
@@ -141,6 +139,121 @@ After that, you can check for missing cards and dust cost to craft a deck::
 
     DUST TO CRAFT: 4000
 
+Also, you can get a collection summary::
+
+    $ hsdecks -s myuser
+
+    Myuser COLLECTION
+    ------------------
+
+    BASIC
+    -----
+
+    +--------+-----------+--------+---------+------+---------------+
+    | RARITY |   OWNED   |   %    | MISSING |  %   | DUST TO CRAFT |
+    +--------+-----------+--------+---------+------+---------------+
+    |        |           |        |         |      |               |
+    |  FREE  | 286 / 286 | 100.00 |    0    | 0.00 |       0       |
+    +--------+-----------+--------+---------+------+---------------+
+
+    CLASSIC
+    -------
+
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  RARITY   |   OWNED   |   %    | MISSING |   %   | DUST TO CRAFT |
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  COMMON   | 184 / 184 | 100.00 |    0    | 0.00  |       0       |
+    |   RARE    | 92 / 160  | 57.50  |   68    | 42.50 |     6800      |
+    |   EPIC    |  19 / 72  | 26.39  |   53    | 73.61 |     21200     |
+    | LEGENDARY |  5 / 32   | 15.62  |   27    | 84.38 |     43200     |
+    |           |           |        |         |       |               |
+    |   TOTAL   | 300 / 448 | 66.96  |   148   | 33.04 |     71200     |
+    +-----------+-----------+--------+---------+-------+---------------+
+
+    HALL OF FAME
+    ------------
+
+    +-----------+--------+-------+---------+--------+---------------+
+    |  RARITY   | OWNED  |   %   | MISSING |   %    | DUST TO CRAFT |
+    +-----------+--------+-------+---------+--------+---------------+
+    |  COMMON   | 6 / 22 | 27.27 |   16    | 72.73  |      640      |
+    |   RARE    | 3 / 16 | 18.75 |   13    | 81.25  |     1300      |
+    |   EPIC    | 0 / 14 | 0.00  |   14    | 100.00 |     5600      |
+    | LEGENDARY | 0 / 9  | 0.00  |    9    | 100.00 |     14400     |
+    |           |        |       |         |        |               |
+    |   TOTAL   | 9 / 61 | 14.75 |   52    | 85.25  |     21940     |
+    +-----------+--------+-------+---------+--------+---------------+
+
+    RISE OF SHADOWS
+    ---------------
+
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  RARITY   |   OWNED   |   %    | MISSING |   %   | DUST TO CRAFT |
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  COMMON   |  98 / 98  | 100.00 |    0    | 0.00  |       0       |
+    |   RARE    |  50 / 74  | 67.57  |   24    | 32.43 |     2400      |
+    |   EPIC    |  12 / 52  | 23.08  |   40    | 76.92 |     16000     |
+    | LEGENDARY |  6 / 24   | 25.00  |   18    | 75.00 |     28800     |
+    |           |           |        |         |       |               |
+    |   TOTAL   | 166 / 248 | 66.94  |   82    | 33.06 |     47200     |
+    +-----------+-----------+--------+---------+-------+---------------+
+
+    SAVIORS OF ULDUM
+    ----------------
+
+    +-----------+-----------+-------+---------+-------+---------------+
+    |  RARITY   |   OWNED   |   %   | MISSING |   %   | DUST TO CRAFT |
+    +-----------+-----------+-------+---------+-------+---------------+
+    |  COMMON   |  93 / 98  | 94.90 |    5    | 5.10  |      200      |
+    |   RARE    |  53 / 72  | 73.61 |   19    | 26.39 |     1900      |
+    |   EPIC    |  12 / 54  | 22.22 |   42    | 77.78 |     16800     |
+    | LEGENDARY |  4 / 23   | 17.39 |   19    | 82.61 |     30400     |
+    |           |           |       |         |       |               |
+    |   TOTAL   | 162 / 247 | 65.59 |   85    | 34.41 |     49300     |
+    +-----------+-----------+-------+---------+-------+---------------+
+
+    DESCENT OF DRAGONS
+    ------------------
+
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  RARITY   |   OWNED   |   %    | MISSING |   %   | DUST TO CRAFT |
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  COMMON   |  98 / 98  | 100.00 |    0    | 0.00  |       0       |
+    |   RARE    |  64 / 72  | 88.89  |    8    | 11.11 |      800      |
+    |   EPIC    |  21 / 54  | 38.89  |   33    | 61.11 |     13200     |
+    | LEGENDARY |  14 / 28  | 50.00  |   14    | 50.00 |     22400     |
+    |           |           |        |         |       |               |
+    |   TOTAL   | 197 / 252 | 78.17  |   55    | 21.83 |     36400     |
+    +-----------+-----------+--------+---------+-------+---------------+
+
+    ASHES OF OUTLAND
+    ----------------
+
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  RARITY   |   OWNED   |   %    | MISSING |   %   | DUST TO CRAFT |
+    +-----------+-----------+--------+---------+-------+---------------+
+    |  COMMON   | 104 / 104 | 100.00 |    0    | 0.00  |       0       |
+    |   RARE    |  70 / 70  | 100.00 |    0    | 0.00  |       0       |
+    |   EPIC    |  14 / 46  | 30.43  |   32    | 69.57 |     12800     |
+    | LEGENDARY |  8 / 25   | 32.00  |   17    | 68.00 |     27200     |
+    |           |           |        |         |       |               |
+    |   TOTAL   | 196 / 245 | 80.00  |   49    | 20.00 |     40000     |
+    +-----------+-----------+--------+---------+-------+---------------+
+
+    DEMON HUNTER INITIATE
+    ---------------------
+
+    +-----------+---------+--------+---------+------+---------------+
+    |  RARITY   |  OWNED  |   %    | MISSING |  %   | DUST TO CRAFT |
+    +-----------+---------+--------+---------+------+---------------+
+    |  COMMON   | 16 / 16 | 100.00 |    0    | 0.00 |       0       |
+    |   RARE    | 12 / 12 | 100.00 |    0    | 0.00 |       0       |
+    |   EPIC    |  8 / 8  | 100.00 |    0    | 0.00 |       0       |
+    | LEGENDARY |  2 / 2  | 100.00 |    0    | 0.00 |       0       |
+    |           |         |        |         |      |               |
+    |   TOTAL   | 38 / 38 | 100.00 |    0    | 0.00 |       0       |
+    +-----------+---------+--------+---------+------+---------------+
+
 
 Notes
 =====
@@ -162,7 +275,8 @@ Usage
 
 ::
 
-    usage: hsdecks [-h] [-l LANG] [-i] [-m USER] [-u | -r | --clear] [-v]
+    usage: hsdecks [-h] [-l LANG] [-i] [-s COLLECTION] [-list] [-d COLLECTION]
+                   [-c COLLECTION] [-u | -r | --clear] [-v]
                    [deck [deck ...]]
 
     hearthstone deck tool
@@ -177,15 +291,27 @@ Usage
                               or zhTW (default: enUS)
         -i, --import-collection
                               import hearthstone collection from hsreplay
-        -m USER, --missing USER
-                              show missing deck cards from user collection and cost
-                              to craft
+        -s COLLECTION, --show-collection COLLECTION
+                              show collection summary
+        -list, --list-collections
+                              list imported collections
+        -d COLLECTION, --delete-collection COLLECTION
+                              delete a collection from database
+        -c COLLECTION, --craft COLLECTION
+                              show cost to craft deck and missing cards
         -u, --update          check online for cards definitions and update database
                               if needed
         -r, --recreate        download cards definitions and recreate database
         --clear               clear database, removing all cards definitions and
-                              user collections
+                              collections
         -v, --version         show program's version number and exit
+
+
+Special thanks to
+=================
+
+- HearthSim python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ for the deckstring parser code
+- HearthstoneJSON <https://hearthstonejson.com/>`_ for the cards definitions
 
 
 .. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
