@@ -3,7 +3,8 @@
 hsdecks
 =======
 
-Hearthstone deck tool.
+A simple hearthstone deck tool created for quickly comparing two decks, eventually, a bunch
+of other functionalities were added, check below for full options.
 
 Cards database is created automatically on the first execution.
 
@@ -310,8 +311,8 @@ Usage
 Special thanks to
 =================
 
-- HearthSim python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ for the deckstring parser code
-- HearthstoneJSON <https://hearthstonejson.com/>`_ for the cards definitions
+- HearthSim `python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ for the deckstring parser code
+- `HearthstoneJSON <https://hearthstonejson.com/>`_ for the cards definitions
 
 
 .. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
