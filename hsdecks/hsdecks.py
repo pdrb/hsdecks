@@ -393,8 +393,9 @@ def dust_cost(deck):
 def missing_deck_cards(db, user, args):
     decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
     missing = []
-    user_col = db.get("collection:" + user.lower())
-    if not user_col:
+    try:
+        user_col = db.get("_collections")[user]
+    except KeyError:
         print("error: {} collection does not exists".format(user.capitalize()))
         sys.exit(1)
     for card in decoded_deck:
@@ -411,14 +412,16 @@ def missing_deck_cards(db, user, args):
 
 # Show missing deck cards and cost to craft
 def show_craft(db, args):
-    missing_deck, hero_class_id, deck_type = missing_deck_cards(db, args.craft, args)
+    missing_deck, hero_class_id, deck_type = missing_deck_cards(
+        db, args.craft.lower(), args
+    )
     print("\nMISSING CARDS")
     print("-------------")
     if missing_deck:
         print_deck(missing_deck, db.get(str(hero_class_id))["cardClass"], deck_type)
         print("\nDUST TO CRAFT: {}\n".format(dust_cost(missing_deck)))
     else:
-        print("NO CARDS MISSING! NICE :)\n")
+        print("\nNO CARDS MISSING! NICE :)\n")
 
 
 # Show deck

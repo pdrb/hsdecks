@@ -3,8 +3,8 @@
 hsdecks
 =======
 
-A simple hearthstone deck tool created for quickly comparing two decks, eventually, a bunch
-of other functionalities were added, check below for full options.
+A simple hearthstone deck tool created for quickly comparing two decks. Eventually, a bunch
+of other functionalities were added. Check below for full options.
 
 Cards database is created automatically on the first execution.
 
@@ -124,7 +124,7 @@ To import a collection just run with the '-i' switch::
 
 After that, you can check for missing cards and dust cost to craft a deck::
 
-    $ hsdecks -m myuser AAECAea5AwTMugPDvAONvQPaxgMN+a4Di7oDvbsD17sDxLwD4LwDusYDx8YD2cYD18gD98gD+cgD/sgDAA==
+    $ hsdecks -c myuser AAECAea5AwTMugPDvAONvQPaxgMN+a4Di7oDvbsD17sDxLwD4LwDusYDx8YD2cYD18gD98gD+cgD/sgDAA==
 
     MISSING CARDS
     -------------
@@ -308,10 +308,10 @@ Usage
         -v, --version         show program's version number and exit
 
 
-Special thanks to
-=================
+Thanks to
+=========
 
-- HearthSim `python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ for the deckstring parser code
+- `HearthSim <https://hearthsim.info/>`_ `python-hearthstone <https://github.com/HearthSim/python-hearthstone>`_ for the deckstring parser code
 - `HearthstoneJSON <https://hearthstonejson.com/>`_ for the cards definitions
 
 
