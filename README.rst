@@ -9,47 +9,46 @@ of other functionalities were added. Check below for full options.
 Cards database is created automatically on the first execution.
 
 HSReplay collection can be imported and used to show a collection summary and to calculate
-dust cost to craft a deck and missing cards.
+dust cost to craft a deck and show the missing cards.
 
-If a single deck code is passed as argument, the entire deck is show.
-
-To compare two decks just pass two deck codes as arguments.
-
-Multiple languages are supported, just use the '-l' switch. See example below and usage for
-a list of supported languages.
+Multiple languages are supported, just use the '-l' switch. See examples below and the main usage
+help for a list of supported languages.
 
 Show deck example::
 
-    $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA
+    $ hsdecks show AAECAZ8FBpwC9gf8uAOEwQOT0APD0QMM+wGVpgPKuAP9uAPquQPruQPsuQPKwQOVzQOezQOfzQPA0QMA
 
-    CLASS: DEMONHUNTER
+    CLASS: PALADIN
     TYPE: STANDARD
 
-      MANA  RARITY       QTY  NAME
-    ------  ---------  -----  ----------------------
-         0  COMMON         2  Twin Slice
-         1  COMMON         2  Blazing Battlemage
-         1  COMMON         2  Crimson Sigil Runner
-         1  COMMON         2  Battlefiend
-         2  FREE           1  Acidic Swamp Ooze
-         2  COMMON         2  Umberwing
-         2  FREE           2  Chaos Strike
-         3  EPIC           2  Eye Beam
-         3  FREE           2  Satyr Overseer
-         4  LEGENDARY      1  Altruis the Outcast
-         4  LEGENDARY      1  Kayn Sunfury
-         4  RARE           2  Raging Felscreamer
-         5  LEGENDARY      1  Metamorphosis
-         5  EPIC           2  Warglaives of Azzinoth
-         5  FREE           2  Glaivebound Adept
-         6  RARE           2  Skull of Gul'dan
-         7  RARE           2  Priestess of Fury
+    +------+-----------+-----+---------------------+---------------------+
+    | MANA |  RARITY   | QTY |        NAME         |         SET         |
+    +------+-----------+-----+---------------------+---------------------+
+    |  0   |  COMMON   |  2  | First Day of School | Scholomance Academy |
+    |  1   |  COMMON   |  2  |   Aldor Attendant   |  Ashes of Outland   |
+    |  1   |  COMMON   |  2  | Animated Broomstick | Scholomance Academy |
+    |  1   |  COMMON   |  2  |     Pen Flinger     | Scholomance Academy |
+    |  2   |   FREE    |  1  |   Novice Engineer   |        Basic        |
+    |  2   |   RARE    |  1  |   Wild Pyromancer   |       Classic       |
+    |  2   | LEGENDARY |  1  |  Murgur Murgurgle   |  Ashes of Outland   |
+    |  2   |  COMMON   |  2  |    Loot Hoarder     |       Classic       |
+    |  2   |   RARE    |  2  |  Libram of Wisdom   |  Ashes of Outland   |
+    |  2   |  COMMON   |  2  |    Hand of A'dal    |  Ashes of Outland   |
+    |  3   | LEGENDARY |  1  |     Lord Barov      | Scholomance Academy |
+    |  3   |   RARE    |  2  |   Salhet's Pride    |  Saviors of Uldum   |
+    |  4   | LEGENDARY |  1  |  High Abbess Alura  | Scholomance Academy |
+    |  5   |  COMMON   |  2  |  Libram of Justice  |  Ashes of Outland   |
+    |  5   |   RARE    |  2  |  Aldor Truthseeker  |  Ashes of Outland   |
+    |  6   |   EPIC    |  2  |    Devout Pupil     | Scholomance Academy |
+    |  7   | LEGENDARY |  1  |    Lady Liadrin     |  Ashes of Outland   |
+    |  9   |   EPIC    |  2  |   Libram of Hope    |  Ashes of Outland   |
+    +------+-----------+-----+---------------------+---------------------+
 
-    DUST: 7400
+    DUST: 9260
 
 Compare decks example::
 
-    $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA AAECAea5AwTMugPDvAONvQPaxgMNlwaLugPXuwPEvAPgvAO6xgPHxgPZxgPVyAP3yAP5yAP+yAPyyQMA
+    $ hsdecks comp AAECAa0GBJACha0DjrEDyL4DDZcC9gfTCoGxA5i2A5O6A5u6A6+6A97MA8vNA9fOA+PRA/7RAwA= AAECAa0GBIWtA46xA8i+A8jAAw2QAvYHsJED2qwDgbEDmLYDk7oDr7oD3swDy80D184D49ED/tEDAA==
 
     DECK DIFFERENCES
     ----------------
@@ -57,61 +56,67 @@ Compare decks example::
     DECK 1
     ------
 
-    CLASS: DEMONHUNTER
+    CLASS: PRIEST
     TYPE: STANDARD
 
-      MANA  RARITY      QTY  NAME
-    ------  --------  -----  ------------------
-         1  COMMON        2  Blazing Battlemage
-         2  FREE          1  Acidic Swamp Ooze
-         4  RARE          2  Raging Felscreamer
-         7  RARE          2  Priestess of Fury
+    +------+--------+-----+---------------------+------------------+
+    | MANA | RARITY | QTY |        NAME         |       SET        |
+    +------+--------+-----+---------------------+------------------+
+    |  1   |  FREE  |  2  |     Holy Smite      |      Basic       |
+    |  2   |  EPIC  |  2  | Sethekk Veilweaver  | Ashes of Outland |
+    |  2   |  FREE  |  2  | Shadow Word: Death  |      Basic       |
+    |  6   |  EPIC  |  1  | Cabal Shadow Priest |     Classic      |
+    +------+--------+-----+---------------------+------------------+
 
     DECK 2
     ------
 
-    CLASS: DEMONHUNTER
+    CLASS: PRIEST
     TYPE: STANDARD
 
-      MANA  RARITY      QTY  NAME
-    ------  --------  -----  -------------------
-         1  COMMON        2  Mana Burn
-         2  FREE          1  Sightless Watcher
-         2  COMMON        2  Spectral Sight
-         3  RARE          2  Questing Adventurer
+    +------+-----------+-----+----------------------------+--------------------+
+    | MANA |  RARITY   | QTY |            NAME            |        SET         |
+    +------+-----------+-----+----------------------------+--------------------+
+    |  0   |   EPIC    |  2  |       Lazul's Scheme       |  Rise of Shadows   |
+    |  1   |  COMMON   |  2  |   Disciple of Galakrond    | Descent of Dragons |
+    |  6   |   EPIC    |  2  |    Cabal Shadow Priest     |      Classic       |
+    |  7   | LEGENDARY |  1  | Galakrond, the Unspeakable | Descent of Dragons |
+    +------+-----------+-----+----------------------------+--------------------+
 
 Show deck in ptBR::
 
-    $ hsdecks AAECAea5AwSKB8y6A8O8A9rGAw35rgOLugO9uwPXuwPEvAPgvAO6xgPHxgPZxgPXyAP3yAP5yAP+yAMA -l ptbr
+    $ hsdecks -l ptbr show AAECAa0GBJACha0DjrEDyL4DDZcC9gfTCoGxA5i2A5O6A5u6A6+6A97MA8vNA9fOA+PRA/7RAwA=
 
-    CLASS: DEMONHUNTER
+    CLASS: PRIEST
     TYPE: STANDARD
 
-      MANA  RARITY       QTY  NAME
-    ------  ---------  -----  -----------------------------
-         0  COMMON         2  Talho Duplo
-         1  COMMON         2  Maga de Batalha Fulgurante
-         1  COMMON         2  Emissário do Signo Carmesim
-         1  COMMON         2  Carnífice de Batalha
-         2  FREE           1  Gosma Ácida do Pântano
-         2  COMMON         2  Asumbra
-         2  FREE           2  Golpe do Caos
-         3  EPIC           2  Raio Ocular
-         3  FREE           2  Feitor Sátiro
-         4  LEGENDARY      1  Altruis, o Proscrito
-         4  LEGENDARY      1  Kayn Solfúria
-         4  RARE           2  Bradovil Enraivecida
-         5  LEGENDARY      1  Metamorfose
-         5  EPIC           2  Glaives de Guerra de Azzinoth
-         5  FREE           2  Adepto da Glaive Jurada
-         6  RARE           2  Crânio de Gul'dan
-         7  RARE           2  Sacerdotisa da Fúria
+    +------+-----------+-----+------------------------+-----------------------+
+    | MANA |  RARITY   | QTY |          NAME          |          SET          |
+    +------+-----------+-----+------------------------+-----------------------+
+    |  0   |  COMMON   |  2  |     Reviver Morto      |  Scholomance Academy  |
+    |  1   |   FREE    |  2  |    Punição Sagrada     |         Basic         |
+    |  1   |   RARE    |  2  |  Clériga das Escamas   | Galakrond's Awakening |
+    |  1   |  COMMON   |  2  |        Renovar         |   Ashes of Outland    |
+    |  1   |  COMMON   |  2  |   Estudos Dragônicos   |  Scholomance Academy  |
+    |  1   |  COMMON   |  2  |     Onda de Apatia     |  Scholomance Academy  |
+    |  2   |   RARE    |  2  |   Piromante Selvagem   |        Classic        |
+    |  2   |   FREE    |  2  | Palavra Sombria: Morte |         Basic         |
+    |  2   |   EPIC    |  2  |  Trança-Véus Sethekk   |   Ashes of Outland    |
+    |  2   |  COMMON   |  2  |   Artesã de Varinhas   |  Scholomance Academy  |
+    |  3   | LEGENDARY |  1  |   Rasgamentes Kaahrj   |  Descent of Dragons   |
+    |  3   |  COMMON   |  2  |        Apoteose        |   Ashes of Outland    |
+    |  4   |   EPIC    |  2  |   Acólito do Conluio   |  Scholomance Academy  |
+    |  5   |   RARE    |  2  |   Encantante Cobalto   |  Descent of Dragons   |
+    |  6   |   EPIC    |  1  | Sacerdotisa do Conluio |        Classic        |
+    |  7   | LEGENDARY |  1  |    Espelho da Alma     |   Ashes of Outland    |
+    |  8   | LEGENDARY |  1  |  Murozond, o Infinito  |  Descent of Dragons   |
+    +------+-----------+-----+------------------------+-----------------------+
 
-    DUST: 7400
+    DUST: 7880
 
-To import a collection just run with the '-i' switch::
+Import a collection from hsreplay::
 
-    $ hsdecks -i
+    $ hsdecks col import
 
     IMPORT COLLECTION
     -----------------
@@ -124,7 +129,7 @@ To import a collection just run with the '-i' switch::
 
 After that, you can check for missing cards and dust cost to craft a deck::
 
-    $ hsdecks -c myuser AAECAea5AwTMugPDvAONvQPaxgMN+a4Di7oDvbsD17sDxLwD4LwDusYDx8YD2cYD18gD98gD+cgD/sgDAA==
+    $ hsdecks craft myuser AAECAea5AwTMugPDvAONvQPaxgMN+a4Di7oDvbsD17sDxLwD4LwDusYDx8YD2cYD18gD98gD+cgD/sgDAA==
 
     MISSING CARDS
     -------------
@@ -132,17 +137,19 @@ After that, you can check for missing cards and dust cost to craft a deck::
     CLASS: DEMONHUNTER
     TYPE: STANDARD
 
-      MANA  RARITY       QTY  NAME
-    ------  ---------  -----  ----------------------
-         4  LEGENDARY      1  Kayn Sunfury
-         5  LEGENDARY      1  Metamorphosis
-         5  EPIC           2  Warglaives of Azzinoth
+    +------+-----------+-----+------------------------+------------------+
+    | MANA |  RARITY   | QTY |          NAME          |       SET        |
+    +------+-----------+-----+------------------------+------------------+
+    |  4   | LEGENDARY |  1  |      Kayn Sunfury      | Ashes of Outland |
+    |  5   | LEGENDARY |  1  |     Metamorphosis      | Ashes of Outland |
+    |  6   |   EPIC    |  2  | Warglaives of Azzinoth | Ashes of Outland |
+    +------+-----------+-----+------------------------+------------------+
 
     DUST TO CRAFT: 4000
 
 Also, you can get a collection summary::
 
-    $ hsdecks -s myuser
+    $ hsdecks col show myuser
 
     Myuser COLLECTION
     -----------------
@@ -255,6 +262,44 @@ Also, you can get a collection summary::
     |   TOTAL   | 38 / 38 | 100.00 |    0    | 0.00 |       0       |
     +-----------+---------+--------+---------+------+---------------+
 
+It is possible to add multiple collections. To see collections help::
+
+    $ hsdecks col -h
+
+    usage: hsdecks col [-h] {import,show,list,delete} [collection]
+
+    positional arguments:
+      {import,show,list,delete}
+                            import - import hearthstone collection from hsreplay;
+                            show - show collection summary;
+                            list - list imported collections;
+                            delete - delete a collection from database;
+      collection            collection name, only used for show and delete actions
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+Similarly, a few database operations are available::
+
+    $ hsdecks db -h
+
+    usage: hsdecks db [-h] {update,recreate,clear}
+
+    positional arguments:
+      {update,recreate,clear}
+                            update - check online for cards definitions
+                            and update database if needed;
+                            recreate - download cards definitions and recreate
+                            database;
+                            clear - clear database, removing all cards definitions
+                            and collections;
+
+      optional arguments:
+        -h, --help            show this help message and exit
+
+The db update is particularly useful when a new expansion comes out.
+
+Like col and db, the show, comp, and craft commands have a simple dedicated help page.
 
 Notes
 =====
@@ -276,36 +321,24 @@ Usage
 
 ::
 
-    usage: hsdecks [-h] [-l LANG] [-i] [-s COLLECTION] [-list] [-d COLLECTION]
-                   [-c COLLECTION] [-u | -r | --clear] [-v]
-                   [deck [deck ...]]
+    usage: hsdecks [-h] [-l LANG] [-v] {show,comp,col,craft,db} ...
 
     hearthstone deck tool
 
-    positional arguments:
-        deck
-
     optional arguments:
-        -h, --help            show this help message and exit
-        -l LANG, --lang LANG  language of the card name: deDE, enUS, esES, esMX,
-                              frFR, itIT, jaJP, koKR, plPL, ptBR, ruRU, thTH, zhCN
-                              or zhTW (default: enUS)
-        -i, --import-collection
-                              import hearthstone collection from hsreplay
-        -s COLLECTION, --show-collection COLLECTION
-                              show collection summary
-        -list, --list-collections
-                              list imported collections
-        -d COLLECTION, --delete-collection COLLECTION
-                              delete a collection from database
-        -c COLLECTION, --craft COLLECTION
-                              show cost to craft deck and missing cards
-        -u, --update          check online for cards definitions and update database
-                              if needed
-        -r, --recreate        download cards definitions and recreate database
-        --clear               clear database, removing all cards definitions and
-                              collections
-        -v, --version         show program's version number and exit
+      -h, --help            show this help message and exit
+      -l LANG, --lang LANG  language of the card name: deDE, enUS, esES, esMX,
+                            frFR, itIT, jaJP, koKR, plPL, ptBR, ruRU, thTH, zhCN
+                            or zhTW (default: enUS)
+      -v, --version         show program's version number and exit
+
+    commands:
+      {show,comp,col,craft,db}
+        show                Show deck
+        comp                Compare decks
+        col                 Collection operations
+        craft               Show cost to craft deck and missing cards
+        db                  Database operations
 
 
 Thanks to

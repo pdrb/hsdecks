@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# hsdecks 0.4.1
+# hsdecks 0.5.0
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
-# date: 20200529
+# date: 20201026
 
 import argparse
 import json
@@ -17,13 +17,70 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.4.1"
+_version = "0.5.0"
 
 
 # Parse args
 def get_parsed_args():
     parser = argparse.ArgumentParser(description="hearthstone deck tool")
-    parser.add_argument("deck", nargs="*")
+    subparsers = parser.add_subparsers(title="commands", dest="command")
+
+    # Show command
+    show_parser = subparsers.add_parser("show", help="Show deck")
+    show_parser.add_argument("deck", action="store", help="Deck code")
+
+    # Compare command
+    comp_parser = subparsers.add_parser("comp", help="Compare decks")
+    comp_parser.add_argument("deck1", action="store", help="First deck code")
+    comp_parser.add_argument("deck2", action="store", help="Second deck code")
+
+    # Collection command
+    col_parser = subparsers.add_parser(
+        "col",
+        help="Collection operations",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    col_parser.add_argument(
+        "action",
+        choices=("import", "show", "list", "delete"),
+        type=str.lower,
+        help="""import - import hearthstone collection from hsreplay;
+show - show collection summary;
+list - list imported collections;
+delete - delete a collection from database;""",
+    )
+    col_parser.add_argument(
+        "collection",
+        nargs="?",
+        type=str.lower,
+        action="store",
+        help="collection name, only used for show and delete actions",
+    )
+
+    # Craft command
+    craft_parser = subparsers.add_parser(
+        "craft", help="Show cost to craft deck and missing cards"
+    )
+    craft_parser.add_argument("collection", action="store", help="Collection to use")
+    craft_parser.add_argument("deck", action="store", help="Deck code")
+
+    # Database command
+    db_parser = subparsers.add_parser(
+        "db", help="Database operations", formatter_class=argparse.RawTextHelpFormatter
+    )
+    db_parser.add_argument(
+        "action",
+        choices=("update", "recreate", "clear"),
+        type=str.lower,
+        help="""update - check online for cards definitions
+and update database if needed;
+recreate - download cards definitions and recreate
+database;
+clear - clear database, removing all cards definitions
+and collections;""",
+    )
+
+    # Optional args
     parser.add_argument(
         "-l",
         "--lang",
@@ -49,56 +106,6 @@ def get_parsed_args():
         "koKR, plPL, ptBR, ruRU, thTH, zhCN or zhTW (default: %(default)s)",
         metavar="LANG",
     )
-    parser.add_argument(
-        "-i",
-        "--import-collection",
-        action="store_true",
-        default=False,
-        help="import hearthstone collection from hsreplay",
-    )
-    parser.add_argument(
-        "-s", "--show-collection", help="show collection summary", metavar="COLLECTION",
-    )
-    parser.add_argument(
-        "-list",
-        "--list-collections",
-        action="store_true",
-        default=False,
-        help="list imported collections",
-    )
-    parser.add_argument(
-        "-d",
-        "--delete-collection",
-        help="delete a collection from database",
-        metavar="COLLECTION",
-    )
-    parser.add_argument(
-        "-c",
-        "--craft",
-        help="show cost to craft deck and missing cards",
-        metavar="COLLECTION",
-    )
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        "-u",
-        "--update",
-        action="store_true",
-        default=False,
-        help="check online for cards definitions and update database if needed",
-    )
-    group.add_argument(
-        "-r",
-        "--recreate",
-        action="store_true",
-        default=False,
-        help="download cards definitions and recreate database",
-    )
-    group.add_argument(
-        "--clear",
-        action="store_true",
-        default=False,
-        help="clear database, removing all cards definitions and collections",
-    )
     parser.add_argument("-v", "--version", action="version", version=_version)
 
     # Parse the args
@@ -106,10 +113,6 @@ def get_parsed_args():
 
     # Normalize lang: enus, ENUS, eNuS... -> enUS
     args.lang = args.lang[:2].lower() + args.lang[2:].upper()
-
-    # Some args validation
-    if len(args.deck) > 2:
-        parser.error("more than two decks informed")
 
     return args
 
@@ -283,7 +286,6 @@ def import_collection(db, app_dir):
     download_collection(col_url, app_dir)
     populate_collection(db, user, app_dir)
     print(" Done!")
-    sys.exit(0)
 
 
 # Populate database
@@ -337,11 +339,11 @@ def create_db(db, app_dir):
 def update_db(db, app_dir):
     print("\nChecking online for cards definitions update...")
     build = db.get("_meta")["build"]
-    print(" Current build: {}".format(build))
+    print("\nCurrent build: {}".format(build))
     latest_build = get_latest_build()
-    print(" Latest build: {}".format(latest_build))
+    print("Latest build: {}".format(latest_build))
     if build == latest_build:
-        print("No update needed!")
+        print("\nNo update needed!")
     else:
         create_db(db, app_dir)
 
@@ -361,7 +363,14 @@ def create_deck(decoded_deck, db, lang):
     deck = []
     for elem in decoded_deck:
         card = db.get(str(elem[0]))
-        set_name = get_set_name(card["set"])
+        try:
+            set_name = get_set_name(card["set"])
+        except:
+            print(
+                "error: card not found! try updating or recreating the database:"
+                " 'hsdecks db update' or 'hsdecks db recreate'"
+            )
+            sys.exit(1)
         deck.append(
             (card["cost"], card["rarity"], elem[1], card["name"][lang], set_name)
         )
@@ -390,13 +399,14 @@ def dust_cost(deck):
 
 
 # Create deck with missing cards
-def missing_deck_cards(db, user, args):
-    decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
+def missing_deck_cards(db, args):
+    decoded_deck, hero_class_id, deck_type = parse_deck(args.deck)
+    col_name = args.collection.lower()
     missing = []
     try:
-        user_col = db.get("_collections")[user]
+        user_col = db.get("_collections")[col_name]
     except KeyError:
-        print("error: {} collection does not exists".format(user.capitalize()))
+        print("error: {} collection does not exists".format(col_name.capitalize()))
         sys.exit(1)
     for card in decoded_deck:
         card_qty = user_col.get(str(card[0]))
@@ -412,9 +422,7 @@ def missing_deck_cards(db, user, args):
 
 # Show missing deck cards and cost to craft
 def show_craft(db, args):
-    missing_deck, hero_class_id, deck_type = missing_deck_cards(
-        db, args.craft.lower(), args
-    )
+    missing_deck, hero_class_id, deck_type = missing_deck_cards(db, args)
     print("\nMISSING CARDS")
     print("-------------")
     if missing_deck:
@@ -426,7 +434,7 @@ def show_craft(db, args):
 
 # Show deck
 def show_deck(db, args):
-    decoded_deck, hero_class_id, deck_type = parse_deck(args.deck[0])
+    decoded_deck, hero_class_id, deck_type = parse_deck(args.deck)
     deck = create_deck(decoded_deck, db, args.lang)
     # Sort deck by mana cost
     deck.sort(key=lambda card: card[0])
@@ -460,6 +468,7 @@ def get_set_name(set_code):
         "ULDUM": "Saviors of Uldum",
         "UNGORO": "Journey to Un'Goro",
         "YEAR_OF_THE_DRAGON": "Galakrond's Awakening",
+        "SCHOLOMANCE": "Scholomance Academy",
     }
     # Return set code if unknown set
     return sets.get(set_code, set_code)
@@ -468,10 +477,10 @@ def get_set_name(set_code):
 # Compare decks
 def compare_decks(db, args):
     # Load first deck
-    decoded_deck, deck1_hero_id, deck1_type = parse_deck(args.deck[0])
+    decoded_deck, deck1_hero_id, deck1_type = parse_deck(args.deck1)
     deck1 = create_deck(decoded_deck, db, args.lang)
     # Load second deck
-    decoded_deck, deck2_hero_id, deck2_type = parse_deck(args.deck[1])
+    decoded_deck, deck2_hero_id, deck2_type = parse_deck(args.deck2)
     deck2 = create_deck(decoded_deck, db, args.lang)
     # Calculate differences
     deck1_diff = set(deck1) - set(deck2)
@@ -496,40 +505,40 @@ def clear_db(db):
     db.clear()
     db.save()
     print(" Done!")
-    sys.exit(0)
 
 
-# List existing users collections
-def list_users(db):
+# List existing collections
+def list_collections(db):
     print("\nCOLLECTIONS")
     print("-----------\n")
     users = db.get("_collections").keys()
     for user in users:
         print("{}".format(user.capitalize()))
     print()
-    sys.exit(0)
 
 
-# Delete a user collection
-def delete_collection(db, user):
+# Delete a collection
+def delete_collection(db, col_name):
+    if not col_name:
+        print("error: please specify a collection to delete")
+        sys.exit(1)
     collections = db.get("_collections")
     try:
-        collections.pop(user.lower())
+        collections.pop(col_name.lower())
     except KeyError:
-        print("error: {} collection does not exists".format(user.capitalize()))
+        print("error: {} collection does not exists".format(col_name.capitalize()))
         sys.exit(1)
     db.insert(collections, "_collections")
     db.save()
-    print("\n{} collection removed!\n".format(user.capitalize()))
-    sys.exit(0)
+    print("\n{} collection removed!\n".format(col_name.capitalize()))
 
 
 # Calc collection
-def calc_collection(db, user):
+def calc_collection(db, col_name):
     try:
-        user_col = db.get("_collections")[user]
+        user_col = db.get("_collections")[col_name]
     except KeyError:
-        print("error: {} collection does not exists".format(user.capitalize()))
+        print("error: {} collection does not exists".format(col_name.capitalize()))
         sys.exit(1)
     col_sum = {}
     for dbfid, qty in user_col.items():
@@ -574,6 +583,9 @@ def calc_collection(db, user):
 
 # Show collection
 def show_collection(db, col_name):
+    if not col_name:
+        print("error: please specify a collection name")
+        sys.exit(1)
     collection = calc_collection(db, col_name.lower())
     banner = "\n{} COLLECTION".format(col_name.capitalize())
     print(banner)
@@ -619,7 +631,6 @@ def show_collection(db, col_name):
             )
         )
         print()
-    sys.exit(0)
 
 
 # Check if card is a hero
@@ -641,49 +652,34 @@ def cli():
     db_file = os.path.join(app_dir, "db.json")
     db = dbj(db_file)
 
-    # Clear database
-    if args.clear:
-        clear_db(db)
-
-    # Show collection
-    if args.show_collection:
-        show_collection(db, args.show_collection)
-
-    # List users
-    if args.list_collections:
-        list_users(db)
-
-    # Remove user collection
-    if args.delete_collection:
-        delete_collection(db, args.delete_collection)
-
-    # Create database if needed
-    if not db.get("_meta") or args.recreate:
+    if not db.get("_meta"):
+        print("\nCould not get database version, a new one will be created...")
         create_db(db, app_dir)
-
-    # Check for cards definitions update
-    if args.update:
-        update_db(db, app_dir)
-
-    # Import collection
-    if args.import_collection:
-        import_collection(db, app_dir)
-
-    if len(args.deck) == 1:
-        # Show missing deck cards from user collection
-        if args.craft:
-            show_craft(db, args)
-        # Show deck
-        else:
-            show_deck(db, args)
-
-    # Compare decks
-    elif len(args.deck) == 2:
+        print("\nAll set! Please run the program again.\n")
+    elif args.command == "show":
+        show_deck(db, args)
+    elif args.command == "comp":
         compare_decks(db, args)
-
-    # Show help
+    elif args.command == "craft":
+        show_craft(db, args)
+    elif args.command == "col":
+        if args.action == "import":
+            import_collection(db, app_dir)
+        elif args.action == "show":
+            show_collection(db, args.collection)
+        elif args.action == "list":
+            list_collections(db)
+        elif args.action == "delete":
+            delete_collection(db, args.collection)
+    elif args.command == "db":
+        if args.action == "update":
+            update_db(db, app_dir)
+        elif args.action == "recreate":
+            create_db(db, app_dir)
+        elif args.action == "clear":
+            clear_db(db)
     else:
-        print("\nNo deck or action provided.\n\nUse hsdecks -h for help\n")
+        print("\nNo action provided.\n\nUse hsdecks -h for help\n")
 
 
 # Run cli function if invoked from shell
