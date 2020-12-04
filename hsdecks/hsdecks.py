@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-# hsdecks 0.5.0
+# hsdecks 0.6.0
 # author: Pedro Buteri Gonring
 # email: pedro@bigode.net
-# date: 20201026
+# date: 20201204
 
 import argparse
 import json
@@ -17,7 +17,7 @@ from tabulate import tabulate
 from dbj import dbj
 
 
-_version = "0.5.0"
+_version = "0.6.0"
 
 
 # Parse args
@@ -469,6 +469,7 @@ def get_set_name(set_code):
         "UNGORO": "Journey to Un'Goro",
         "YEAR_OF_THE_DRAGON": "Galakrond's Awakening",
         "SCHOLOMANCE": "Scholomance Academy",
+        "DARKMOON_FAIRE": "Madness at the Darkmoon Faire",
     }
     # Return set code if unknown set
     return sets.get(set_code, set_code)
@@ -509,9 +510,13 @@ def clear_db(db):
 
 # List existing collections
 def list_collections(db):
+    try:
+        users = db.get("_collections").keys()
+    except Exception:
+        print("\nNo collection found! Try importing one with: 'hsdecks col import'\n")
+        sys.exit(0)
     print("\nCOLLECTIONS")
     print("-----------\n")
-    users = db.get("_collections").keys()
     for user in users:
         print("{}".format(user.capitalize()))
     print()
