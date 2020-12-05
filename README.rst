@@ -1,4 +1,4 @@
-|Black|
+|Black| |Version| |Downloads| |License|
 
 hsdecks
 =======
@@ -350,3 +350,12 @@ Thanks to
 
 .. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
+
+.. |Version| image:: https://badge.fury.io/py/hsdecks.svg
+    :target: https://pypi.org/project/hsdecks/
+
+.. |Downloads| image:: https://pepy.tech/badge/hsdecks
+     :target: https://pepy.tech/project/hsdecks
+
+.. |License| image:: https://img.shields.io/pypi/l/hsdecks.svg
+    :target: https://github.com/pdrb/hsdecks/blob/master/LICENSE
