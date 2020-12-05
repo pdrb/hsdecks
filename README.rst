@@ -1,4 +1,4 @@
-|Black| |Version| |Downloads| |License|
+|Version| |Downloads| |Black| |License|
 
 hsdecks
 =======
